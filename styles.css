@@ -1,81 +1,78 @@
-/* General reset and base styling */
 body {
   margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #0a0a1f;
-  color: #fff;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(ellipse at center, #0b0c1a 0%, #050510 100%);
+  color: white;
   overflow: hidden;
 }
 
-h1 {
-  color: #fff;
-  text-align: center;
-  margin-top: 40px;
-  font-size: 2em;
+.container {
+  position: relative;
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background: rgba(20, 20, 40, 0.8);
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(100, 200, 255, 0.2);
+  z-index: 2;
 }
 
-label, select, button, textarea {
-  display: block;
-  width: 90%;
-  max-width: 600px;
-  margin: 20px auto;
-  font-size: 1em;
-  border-radius: 8px;
-  box-sizing: border-box;
+h1 {
+  text-align: center;
+  color: #8fe3ff;
 }
 
 select, button, textarea {
+  width: 100%;
+  margin: 10px 0;
   padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
   border: none;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
 }
 
 button {
-  background: linear-gradient(to right, #4e54c8, #8f94fb);
+  background-color: #4ec3ff;
+  color: black;
   cursor: pointer;
-  transition: 0.3s ease;
 }
 
 button:hover {
-  transform: scale(1.05);
-  background: linear-gradient(to right, #6a6bff, #a7a8ff);
+  background-color: #8fe3ff;
 }
 
 textarea {
   height: 300px;
-  resize: none;
+  resize: vertical;
   font-family: monospace;
+  background: #111;
+  color: #8fe3ff;
+  border: 1px solid #333;
 }
 
-/* Particle background */
-.particle-container {
+#downloadBtn {
+  background-color: #00ffcc;
+  color: black;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+#downloadBtn:hover {
+  background-color: #66ffe0;
+}
+
+/* Simple particle background effect */
+body::before {
+  content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  background: radial-gradient(circle at center, #0a0a1f 0%, #000010 100%);
-  overflow: hidden;
-}
-
-.particle {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.8;
-  animation: moveParticle linear infinite;
-}
-
-@keyframes moveParticle {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateY(-100vh) scale(0.5);
-    opacity: 0;
-  }
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: radial-gradient(white 1px, transparent 0);
+  background-size: 3px 3px;
+  opacity: 0.05;
+  z-index: 1;
 }
