@@ -1,28 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>JSON Monster Generator</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Space Particle Background -->
-  <div class="particle-container" id="particles"></div>
+  <div class="container">
+    <h1>Monster JSON Generator</h1>
 
-  <h1>Monster JSON Generator</h1>
-  <label for="monster">Select a Monster:</label>
-  <select id="monster"></select>
-  <button onclick="generateJSON()">Generate JSON</button>
-  <textarea id="output" readonly></textarea>
+    <label for="controller">Select your Controller file:</label>
+    <select id="controller" required>
+      <option value="">-- Choose Controller --</option>
+    </select>
+
+    <label for="mobdata">Select your Data file:</label>
+    <select id="mobdata" required>
+      <option value="">-- Choose Data --</option>
+    </select>
+
+    <button onclick="generateJSON()">Generate JSON</button>
+    <a id="downloadBtn" style="display:none;" download="monster.json">Download JSON</a>
+
+    <textarea id="output" readonly placeholder="Generated JSON will appear here..."></textarea>
+  </div>
 
   <script>
-    const monsterIDs = [
+    const controllerIDs = [
       'SpiderController', 'SegwayController', 'RedGreenMadController', 'RedGreenController',
       'PhantomController', 'NextBotStaticController', 'NextBotController', 'GiantController',
       'FlyingSwarmController', 'FakeGorillaController', 'EvilEyeController', 'CystController',
       'ChickenController', 'BomberMadController', 'BomberFlashbangController', 'BomberController',
       'BombController', 'BansheeController', 'ArmstrongMadController', 'ArmstrongController',
-      'AnglerMadController', 'AnglerController',
+      'AnglerMadController', 'AnglerController'
+    ];
+
+    const mobDataIDs = [
       'MobData_Spider', 'MobData_Segway', 'MobData_RedGreen_mad', 'MobData_RedGreen',
       'MobData_Phantom', 'MobData_NextBotStatic', 'MobData_NextBot', 'MobData_LongAisle',
       'MobData_Giant', 'MobData_FlyingSwarm', 'MobData_FakeGorilla', 'MobData_EvilEye',
@@ -31,29 +44,50 @@
       'MobData_Armstrong', 'MobData_Angler_mad', 'MobData_Angler'
     ];
 
-    const select = document.getElementById("monster");
-    monsterIDs.forEach(id => {
+    const controllerSelect = document.getElementById("controller");
+    const mobDataSelect = document.getElementById("mobdata");
+
+    controllerIDs.forEach(id => {
       const option = document.createElement("option");
       option.value = id;
       option.textContent = id;
-      select.appendChild(option);
+      controllerSelect.appendChild(option);
+    });
+
+    mobDataIDs.forEach(id => {
+      const option = document.createElement("option");
+      option.value = id;
+      option.textContent = id;
+      mobDataSelect.appendChild(option);
+    });
+
+    // Auto sync
+    controllerSelect.addEventListener("change", () => {
+      const base = controllerSelect.value.replace("Controller", "");
+      const match = "MobData_" + base;
+      if ([...mobDataSelect.options].some(o => o.value === match)) {
+        mobDataSelect.value = match;
+      }
+    });
+
+    mobDataSelect.addEventListener("change", () => {
+      const base = mobDataSelect.value.replace("MobData_", "");
+      const match = base + "Controller";
+      if ([...controllerSelect.options].some(o => o.value === match)) {
+        controllerSelect.value = match;
+      }
     });
 
     function generateJSON() {
-      const selectedID = select.value;
-      let controller = selectedID;
-      let mobData = null;
+      const controller = controllerSelect.value;
+      const mobDataRaw = mobDataSelect.value;
 
-      if (selectedID.startsWith("MobData_")) {
-        controller = selectedID.replace("MobData_", "") + "Controller";
-        mobData = selectedID.replace("MobData_", "");
-      } else {
-        const suffix = selectedID.replace("Controller", "");
-        const possibleMobData = "MobData_" + suffix;
-        if (monsterIDs.includes(possibleMobData)) {
-          mobData = suffix;
-        }
+      if (!controller || !mobDataRaw) {
+        alert("Please select both a Controller and Data file.");
+        return;
       }
+
+      const mobData = mobDataRaw.replace("MobData_", "");
 
       const json = {
         version: 1,
@@ -74,7 +108,8 @@
                   colorSaturation: 116,
                   children: [
                     {
-                      itemID: controller
+                      itemID: controller,
+                      MobData: mobData
                     }
                   ]
                 }
@@ -87,31 +122,15 @@
         back: {}
       };
 
-      if (mobData) {
-        json.rightHand.children[0].children[0].children[0].MobData = mobData;
-      }
+      const jsonStr = JSON.stringify(json, null, 2);
+      document.getElementById("output").value = jsonStr;
 
-      document.getElementById("output").value = JSON.stringify(json, null, 2);
-    }
-
-    // Create particle stars
-    const container = document.getElementById('particles');
-    for (let i = 0; i < 150; i++) {
-      const star = document.createElement('div');
-      star.className = 'particle';
-      const size = Math.random() * 3 + 1;
-      const duration = Math.random() * 10 + 5;
-      const left = Math.random() * 100;
-      const delay = Math.random() * 20;
-
-      star.style.width = `${size}px`;
-      star.style.height = `${size}px`;
-      star.style.left = `${left}%`;
-      star.style.bottom = `-10px`;
-      star.style.animationDuration = `${duration}s`;
-      star.style.animationDelay = `${delay}s`;
-
-      container.appendChild(star);
+      const blob = new Blob([jsonStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const downloadBtn = document.getElementById("downloadBtn");
+      downloadBtn.href = url;
+      downloadBtn.style.display = "inline-block";
+      downloadBtn.textContent = "Download JSON";
     }
   </script>
 </body>
