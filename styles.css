@@ -1,0 +1,81 @@
+/* General reset and base styling */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0a0a1f;
+  color: #fff;
+  overflow: hidden;
+}
+
+h1 {
+  color: #fff;
+  text-align: center;
+  margin-top: 40px;
+  font-size: 2em;
+}
+
+label, select, button, textarea {
+  display: block;
+  width: 90%;
+  max-width: 600px;
+  margin: 20px auto;
+  font-size: 1em;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+select, button, textarea {
+  padding: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+button {
+  background: linear-gradient(to right, #4e54c8, #8f94fb);
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(to right, #6a6bff, #a7a8ff);
+}
+
+textarea {
+  height: 300px;
+  resize: none;
+  font-family: monospace;
+}
+
+/* Particle background */
+.particle-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: radial-gradient(circle at center, #0a0a1f 0%, #000010 100%);
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: moveParticle linear infinite;
+}
+
+@keyframes moveParticle {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-100vh) scale(0.5);
+    opacity: 0;
+  }
+}
