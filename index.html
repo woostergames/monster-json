@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>JSON Monster Generator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Space Particle Background -->
+  <div class="particle-container" id="particles"></div>
+
+  <h1>Monster JSON Generator</h1>
+  <label for="monster">Select a Monster:</label>
+  <select id="monster"></select>
+  <button onclick="generateJSON()">Generate JSON</button>
+  <textarea id="output" readonly></textarea>
+
+  <script>
+    const monsterIDs = [
+      'SpiderController', 'SegwayController', 'RedGreenMadController', 'RedGreenController',
+      'PhantomController', 'NextBotStaticController', 'NextBotController', 'GiantController',
+      'FlyingSwarmController', 'FakeGorillaController', 'EvilEyeController', 'CystController',
+      'ChickenController', 'BomberMadController', 'BomberFlashbangController', 'BomberController',
+      'BombController', 'BansheeController', 'ArmstrongMadController', 'ArmstrongController',
+      'AnglerMadController', 'AnglerController',
+      'MobData_Spider', 'MobData_Segway', 'MobData_RedGreen_mad', 'MobData_RedGreen',
+      'MobData_Phantom', 'MobData_NextBotStatic', 'MobData_NextBot', 'MobData_LongAisle',
+      'MobData_Giant', 'MobData_FlyingSwarm', 'MobData_FakeGorilla', 'MobData_EvilEye',
+      'MobData_Cyst', 'MobData_Chicken', 'MobData_Bomber_mad', 'MobData_Bomber_flashbang',
+      'MobData_Bomber', 'MobData_Bomb', 'MobData_Banshee', 'MobData_Armstrong_mad',
+      'MobData_Armstrong', 'MobData_Angler_mad', 'MobData_Angler'
+    ];
+
+    const select = document.getElementById("monster");
+    monsterIDs.forEach(id => {
+      const option = document.createElement("option");
+      option.value = id;
+      option.textContent = id;
+      select.appendChild(option);
+    });
+
+    function generateJSON() {
+      const selectedID = select.value;
+      let controller = selectedID;
+      let mobData = null;
+
+      if (selectedID.startsWith("MobData_")) {
+        controller = selectedID.replace("MobData_", "") + "Controller";
+        mobData = selectedID.replace("MobData_", "");
+      } else {
+        const suffix = selectedID.replace("Controller", "");
+        const possibleMobData = "MobData_" + suffix;
+        if (monsterIDs.includes(possibleMobData)) {
+          mobData = suffix;
+        }
+      }
+
+      const json = {
+        version: 1,
+        leftHand: {},
+        rightHand: {
+          itemID: "item_backpack_small_base",
+          colorHue: 161,
+          colorSaturation: 116,
+          children: [
+            {
+              itemID: "item_heart_gun",
+              colorHue: 161,
+              colorSaturation: 116,
+              children: [
+                {
+                  itemID: "item_crossbow",
+                  colorHue: 161,
+                  colorSaturation: 116,
+                  children: [
+                    {
+                      itemID: controller
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        leftHip: {},
+        rightHip: {},
+        back: {}
+      };
+
+      if (mobData) {
+        json.rightHand.children[0].children[0].children[0].MobData = mobData;
+      }
+
+      document.getElementById("output").value = JSON.stringify(json, null, 2);
+    }
+
+    // Create particle stars
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 150; i++) {
+      const star = document.createElement('div');
+      star.className = 'particle';
+      const size = Math.random() * 3 + 1;
+      const duration = Math.random() * 10 + 5;
+      const left = Math.random() * 100;
+      const delay = Math.random() * 20;
+
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.left = `${left}%`;
+      star.style.bottom = `-10px`;
+      star.style.animationDuration = `${duration}s`;
+      star.style.animationDelay = `${delay}s`;
+
+      container.appendChild(star);
+    }
+  </script>
+</body>
+</html>
